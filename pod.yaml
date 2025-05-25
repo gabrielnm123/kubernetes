@@ -1,15 +1,15 @@
-apiVersion: v1
-kind: Pod
+apiVersion: v1            # Versão da API Kubernetes usada para o Pod (v1 para recursos básicos como Pod)
+kind: Pod                 # Tipo do recurso, aqui é um Pod, a menor unidade executável no Kubernetes
 metadata:
-  creationTimestamp: null
+  creationTimestamp: null # Timestamp de criação (vazio porque ainda não foi aplicado)
   labels:
-    run: nginx-pod
-  name: nginx-pod
+    run: nginx-pod        # Label para identificar o Pod (útil para seletores e organização)
+  name: nginx-pod         # Nome do Pod
 spec:
   containers:
-  - image: nginx
-    name: nginx-pod
-    resources: {}
-  dnsPolicy: ClusterFirst
-  restartPolicy: Always
-status: {}
+  - image: nginx          # Imagem do container que será executado dentro do Pod (nginx padrão)
+    name: nginx-pod       # Nome do container dentro do Pod
+    resources: {}         # Recursos (CPU, memória) solicitados e limites, vazio aqui
+  dnsPolicy: ClusterFirst # Política de DNS usada pelo Pod, "ClusterFirst" prioriza o DNS do cluster Kubernetes
+  restartPolicy: Always   # Política de reinício dos containers no Pod (sempre reinicia se o container falhar)
+status: {}                # Status atual do Pod (vazio no manifesto, preenchido pelo Kubernetes)

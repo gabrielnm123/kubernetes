@@ -1,24 +1,24 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps/v1  # Versão da API Kubernetes usada para Deployment (apps/v1 é a mais comum para Deployments)
+kind: Deployment     # Tipo do recurso, aqui é um Deployment que gerencia réplicas de Pods
 metadata:
-  creationTimestamp: null
+  creationTimestamp: null  # Timestamp de criação (vazio porque ainda não foi aplicado)
   labels:
-    app: webserver
-  name: webserver
+    app: webserver   # Label para identificar o Deployment
+  name: webserver    # Nome do Deployment
 spec:
-  replicas: 1
+  replicas: 1        # Número de réplicas de Pod que o Deployment deve manter
   selector:
     matchLabels:
-      app: webserver
-  strategy: {}
-  template:
+      app: webserver # Seleciona os Pods que têm a label "app: webserver" para serem gerenciados por este Deployment
+  strategy: {}       # Estratégia de atualização (deixada padrão, que é RollingUpdate)
+  template:          # Template que define como os Pods gerenciados serão criados
     metadata:
       creationTimestamp: null
       labels:
-        app: webserver
+        app: webserver # Labels aplicadas aos Pods criados pelo Deployment, devem casar com o selector acima
     spec:
       containers:
-      - image: mateusmuller2/webserver:0.1-878d903
-        name: webserver
-        resources: {}
-status: {}
+      - image: mateusmuller2/webserver:0.1-878d903  # Imagem do container a ser usada no Pod
+        name: webserver     # Nome do container dentro do Pod
+        resources: {}       # Limites e requisições de recursos (CPU, memória), vazio aqui
+status: {}                 # Status do Deployment (vazio no manifesto, é preenchido pelo Kubernetes após aplicação)
