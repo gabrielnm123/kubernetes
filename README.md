@@ -213,3 +213,53 @@ kubectl create deployment --image=mateusmuller2/webserver:0.1-878d903 webserver 
 ```
 
 > Esses comandos ajudam a interagir e gerenciar os recursos do cluster Kubernetes, seja para listar, criar, simular ou deletar objetos.
+
+## 🧪 Testes no Cluster com kubectl
+
+```bash
+# Aplica o arquivo deployment.yaml, que provavelmente define um Deployment com múltiplos Pods baseados em uma imagem de container.
+kubectl apply -f deployment.yaml
+# Cria um Pod interativo usando a imagem Alpine Linux e abre um shell (sh). Ideal para testes dentro da rede do cluster.
+kubectl run --image alpine -it demo sh
+# Expõe o Deployment chamado webserver como um serviço Kubernetes. O --port define a porta externa e o --target-port é a porta do container dentro do pod.
+kubectl expose deployment webserver --port 80 --target-port 80
+# Expõe o Deployment chamado webserver como um serviço Kubernetes. O --port define a porta externa e o --target-port é a porta do container dentro do pod.
+kubectl get services
+# Lista todos os serviços criados no cluster, com seus tipos (ClusterIP, NodePort, LoadBalancer), IPs e portas.
+kubectl get service webserver -o yaml
+# Exibe os detalhes completos do serviço webserver em YAML, útil para inspecionar configurações de rede e seleção de pods.
+kubectl get service webserver -o yaml
+# Mostra os pods em execução junto com os rótulos (labels), essenciais para identificar a quais serviços ou deployments eles pertencem.
+kubectl get pod --show-labels
+# Mostra os IPs dos pods que estão sendo apontados pelo serviço webserver, confirmando se os endpoints estão funcionando corretamente.
+kubectl get endpoints webserver
+# Executa um Pod interativo chamado demo com a imagem Alpine e abre um shell (sh) dentro dele para testes/debug no cluster.
+sudo kubectl run --image alpine -it demo sh
+```
+
+Dentro do Pod Alpine:
+
+```bash
+apk add curl
+```
+
+Testes de conectividade:
+
+```bash
+curl 10.244.3.6         # falha (pod pode não estar mais rodando)
+curl 10.244.3.5         # sucesso
+curl webserver          # sucesso
+curl http://webserver.default.svc.cluster.local   # sucesso
+```
+
+Loop para testar balanceamento:
+
+```bash
+while true; do curl http://webserver.default.svc; sleep 1; done
+```
+
+> Confirma que:
+>
+> * O DNS interno do cluster está funcionando
+> * O serviço faz balanceamento entre múltiplos pods
+> * Nem sempre o acesso direto ao IP de pod funciona (especialmente se o pod tiver sido encerrado)
