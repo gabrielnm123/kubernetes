@@ -135,3 +135,81 @@ Os Pods continuam sendo a menor unidade de execução, mas em produção eles s�
 ---
 
 > Em resumo: Kind simula tudo localmente, enquanto um cluster de produção é altamente distribuído, resiliente e escalável com componentes reais e integração com infraestrutura externa.
+
+## 🧑‍💻 Principais comandos
+
+### **Comandos Básicos do Kubectl**
+
+* `kubectl version` — Exibe a versão do cliente e do servidor Kubernetes.
+* `kubectl get pod` — Lista os pods em execução no namespace padrão.
+* `kubectl get pod -A` ou `kubectl get pod --all-namespaces` — Lista **todos os pods em todos os namespaces**.
+* `kubectl get pod -o wide` ou `kubectl get pod -owide` — Lista pods com informações estendidas (IPs, nós e namespace).
+* `kubectl delete pod <nome-do-pod>` — Remove um pod específico.
+
+---
+
+### **Criação/Simulação de Recursos**
+
+* `kubectl run --image nginx nginx-pod` — Cria um pod chamado `nginx-pod` usando a imagem `nginx`.
+* `kubectl run --image nginx --dry-run=client -o yaml nginx-pod` — Gera o YAML do pod sem criá-lo (útil para gerar manifestos).
+* `kubectl apply -f pod.yaml` — Aplica a configuração definida no arquivo `pod.yaml`.
+
+---
+
+### **Deployments e Escalonamento**
+
+* `kubectl create deployment --image nginx nginx-prod` — Cria um deployment `nginx-prod` com a imagem `nginx`.
+* `kubectl get deployment` — Lista todos os deployments.
+* `kubectl get deployment -owide` — Lista deployments com informações adicionais (como número de réplicas).
+* `kubectl scale deployment nginx-prod --replicas=10` — Ajusta o número de réplicas do deployment para 10.
+* `kubectl delete deploy <nome-do-deployment>` — Remove um deployment (atalho para `delete deployment`).
+
+---
+
+### **ReplicaSets e Debug**
+
+* `kubectl get replicaset` — Lista ReplicaSets, que gerenciam as réplicas dos pods.
+* `kubectl get node -v9` — Lista nós com nível máximo de verbosidade (logs detalhados para debug).
+* `kubectl get pod -A -owide` — Lista **todos os pods** em todos os namespaces com informações estendidas (IP, nó, namespace).
+
+---
+
+### **Observações Importantes**
+
+1. **Aliases:**  
+   `deploy` é um alias para `deployment` (ex: `kubectl get deploy`).  
+   `-owide` equivale a `-o wide` (formato de saída estendido).  
+
+2. **Flags de Debug:**  
+   A flag `-v` (verbosidade) varia de 0 a 9, sendo `-v9` o nível mais detalhado.  
+
+3. **Gerenciamento de Recursos:**  
+   Comandos como `delete pod` ou `delete deploy` removem recursos imediatamente.  
+   Use `--dry-run=client` para simular operações sem alterar o cluster.
+
+---
+
+### Exemplo Completo de Uso
+
+```bash
+# Criar um deployment "webserver" com imagem customizada
+kubectl create deployment webserver --image=mateusmuller2/webserver:0.1-878d903
+
+# Listar pods com detalhes de IP e nó
+kubectl get pod -owide
+
+# Escalonar para 5 réplicas
+kubectl scale deployment webserver --replicas=5
+
+# Deletar o deployment e todos os pods associados
+kubectl delete deploy webserver
+
+# Gera o arquivo deployment.yaml com a definição do Deployment 'webserver' usando a imagem especificada,
+# sem criar o deployment de fato no cluster (--dry-run),
+# para que possa ser revisado ou editado antes da aplicação.
+kubectl create deployment --image=mateusmuller2/webserver:0.1-878d903 webserver --dry-run -o yaml > deployment.yaml
+
+
+```
+
+> Esses comandos ajudam a interagir e gerenciar os recursos do cluster Kubernetes, seja para listar, criar, simular ou deletar objetos.
