@@ -1,6 +1,6 @@
 # Arquitetura de um Cluster Kubernetes
 
-![Arquitetura Kubernetes](https://d33wubrfki0l68.cloudfront.net/666223508135a452441f7131aed61512832a13c3/03a91/images/docs/components-of-kubernetes.svg)
+![Arquitetura Kubernetes](./image.png)
 
 Esta imagem ilustra os principais componentes de um cluster Kubernetes, divididos em duas áreas principais: o **Control Plane** e os **Nodes**.
 
